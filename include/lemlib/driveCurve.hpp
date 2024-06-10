@@ -46,7 +46,7 @@ class ExpoDriveCurve : public DriveCurve {
          * lemlib::ExpoDriveCurve driveCurve(5, 12, 1.132);
          * @endcode
          */
-        ExpoDriveCurve(float deadband, float minOutput, float curve);
+        ExpoDriveCurve(float upperLimit, float lowerLimit, float minOutput, float curve);
         /**
          * @brief curve an input
          *
@@ -68,7 +68,8 @@ class ExpoDriveCurve : public DriveCurve {
          */
         float curve(float input);
     private:
-        const float deadband = 0;
+        const float upperLimit = 0;
+        const float lowerLimit = 0;
         const float minOutput = 0;
         const float curveGain = 1;
 };

@@ -1,14 +1,23 @@
 #include "main.h"
 #include "lemlib/api.hpp" // IWYU pragma: keep
 #include "lemlib/chassis/trackingWheel.hpp"
+#include "pros/adi.hpp"
 #include "pros/misc.h"
 
 // controller
 pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
+// pistons
+pros::adi::DigitalOut leftWing('g');
+
 // motors
-pros::MotorGroup leftMotors({-13, 12, -14}, pros::MotorGearset::blue);
-pros::MotorGroup rightMotors({18, -16, 17}, pros::MotorGearset::blue);
+pros::MotorGroup leftDrive({-13, 12, -14}, pros::MotorGearset::blue);
+pros::MotorGroup rightDrive({18, -16, 17}, pros::MotorGearset::blue);
+// the robot will either have a the intake motors connected or the kicker motors connected, but not both
+pros::Motor leftIntake(15);
+pros::Motor rightIntake(-19);
+pros::Motor leftKicker(-2);
+pros::Motor rightKicker(9);
 
 // sensors
 pros::Rotation verticalTrackingWheelEncoder(-11);
@@ -20,8 +29,8 @@ lemlib::TrackingWheel verticalTrackingWheel(&verticalTrackingWheelEncoder, lemli
 lemlib::TrackingWheel horizontalTrackingWheel(&horizontalTrackingWheelEncoder, lemlib::Omniwheel::NEW_275, -2.5);
 
 // drivetrain settings
-lemlib::Drivetrain drivetrain(&leftMotors, // left motor group
-                              &rightMotors, // right motor group
+lemlib::Drivetrain drivetrain(&leftDrive, // left motor group
+                              &rightDrive, // right motor group
                               10, // 10 inch track width
                               lemlib::Omniwheel::NEW_4, // using new 4" omnis
                               343, // drivetrain rpm is 360
@@ -61,14 +70,16 @@ lemlib::ControllerSettings angularController(2, // proportional gain (kP)
 );
 
 // input curve for throttle input during driver control
-lemlib::ExpoDriveCurve throttleCurve(0, // joystick deadband out of 127
+lemlib::ExpoDriveCurve throttleCurve(0, // upper joystick deadband out of 127
+                                     0, // lower joystick deadband out of 127
                                      12, // minimum output where drivetrain will move out of 127
                                      1.019 // expo curve gain
 );
 
 // input curve for steer input during driver control
-lemlib::ExpoDriveCurve steerCurve(4, // joystick deadband out of 127
-                                  23, // minimum output where drivetrain will move out of 127
+lemlib::ExpoDriveCurve steerCurve(0, // upper joystick deadband out of 127
+                                  0, // lower joystick deadband out of 127
+                                  15, // minimum output where drivetrain will move out of 127
                                   1.019 // expo curve gain
 );
 
@@ -77,9 +88,6 @@ lemlib::Chassis chassis(drivetrain, linearController, angularController, sensors
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
- *
- * All other competition modes are blocked by initialize; it is recommended
- * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
     pros::lcd::initialize(); // initialize brain screen
@@ -109,8 +117,6 @@ void competition_initialize() {}
 
 /**
  * Runs during auto
- *
- * This is an example autonomous routine which demonstrates a lot of the features LemLib has to offer
  */
 void autonomous() {}
 
@@ -122,17 +128,10 @@ void opcontrol() {
     // loop to continuously update motors
     while (true) {
         // get joystick positions
-        const auto leftY = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
-        const auto rightX = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
-        // calculate motor outputs
-        // const auto leftOutput = leftY + rightX;
-        // const auto rightOutput = leftY - rightX;
-        // set motor outputs
-        // leftMotors.move(throttlePower);
-        // rightMotors.move(throttlePower);
-        // print motor outputs to the brain screen
+        int leftY = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
+        int rightX = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
         // move the chassis with curvature drive
-        // chassis.arcade(leftY, rightX, false, 1);
+        chassis.arcade(leftY, rightX, 0, 0.75);
         // delay to save resources
         pros::delay(10);
     }
