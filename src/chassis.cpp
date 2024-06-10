@@ -3,17 +3,14 @@
 #include "opcontrol.hpp"
 
 // tracking wheels
-lemlib::TrackingWheel verticalTrackingWheel(&verticalTrackingWheelEncoder, lemlib::Omniwheel::NEW_275, -5.75);
-lemlib::TrackingWheel horizontalTrackingWheel(&horizontalTrackingWheelEncoder, lemlib::Omniwheel::NEW_275, -2.5);
+lemlib::TrackingWheel verticalTrackingWheel(&verticalTrackingWheelEncoder, VERTICAL_TRACKING_WHEEL_DIAMETER,
+                                            VERTICAL_TRACKING_WHEEL_OFFSET);
+lemlib::TrackingWheel horizontalTrackingWheel(&horizontalTrackingWheelEncoder, HORIZONTAL_TRACKING_WHEEL_DIAMETER,
+                                              HORIZONTAL_TRACKING_WHEEL_OFFSET);
 
 // drivetrain settings
-lemlib::Drivetrain drivetrain(&leftDrive, // left motor group
-                              &rightDrive, // right motor group
-                              10, // 10 inch track width
-                              lemlib::Omniwheel::NEW_4, // using new 4" omnis
-                              343, // drivetrain rpm is 360
-                              2 // horizontal drift is 2. If we had traction wheels, it would have been 8
-);
+lemlib::Drivetrain drivetrain(&leftDrive, &rightDrive, DRIVETRAIN_TRACK_WIDTH, DRIVETRAIN_WHEEL_DIAMETER,
+                              DRIVETRAIN_RPM, DRIVETRAIN_HORIZONTAL_DRIFT);
 
 // sensors for odometry
 lemlib::OdomSensors sensors(&verticalTrackingWheel, // vertical tracking wheel
@@ -24,27 +21,27 @@ lemlib::OdomSensors sensors(&verticalTrackingWheel, // vertical tracking wheel
 );
 
 // lateral motion controller
-lemlib::ControllerSettings linearController(10, // proportional gain (kP)
-                                            0, // integral gain (kI)
-                                            3, // derivative gain (kD)
-                                            3, // anti windup
-                                            1, // small error range, in inches
-                                            100, // small error range timeout, in milliseconds
-                                            3, // large error range, in inches
-                                            500, // large error range timeout, in milliseconds
-                                            20 // maximum acceleration (slew)
+lemlib::ControllerSettings linearController(LINEAR_KP, // proportional gain (kP)
+                                            LINEAR_KI, // integral gain (kI)
+                                            LINEAR_KD, // derivative gain (kD)
+                                            LINEAR_ANTI_WINDUP, // anti windup
+                                            LINEAR_SMALL_ERROR, // small error range, in inches
+                                            LINEAR_SMALL_ERROR_TIMEOUT, // small error range timeout, in milliseconds
+                                            LINEAR_LARGE_ERROR, // large error range, in inches
+                                            LINEAR_LARGE_ERROR_TIMEOUT, // large error range timeout, in milliseconds
+                                            LINEAR_MAX_ACCEL // maximum acceleration (slew)
 );
 
 // angular motion controller
-lemlib::ControllerSettings angularController(2, // proportional gain (kP)
-                                             0, // integral gain (kI)
-                                             10, // derivative gain (kD)
-                                             3, // anti windup
-                                             1, // small error range, in degrees
-                                             100, // small error range timeout, in milliseconds
-                                             3, // large error range, in degrees
-                                             500, // large error range timeout, in milliseconds
-                                             0 // maximum acceleration (slew)
+lemlib::ControllerSettings angularController(ANGULAR_KP, // proportional gain (kP)
+                                             ANGULAR_KI, // integral gain (kI)
+                                             ANGULAR_KD, // derivative gain (kD)
+                                             ANGULAR_ANTI_WINDUP, // anti windup
+                                             ANGULAR_SMALL_ERROR, // small error range, in degrees
+                                             ANGULAR_SMALL_ERROR_TIMEOUT, // small error range timeout, in milliseconds
+                                             ANGULAR_LARGE_ERROR, // large error range, in degrees
+                                             ANGULAR_LARGE_ERROR_TIMEOUT, // large error range timeout, in milliseconds
+                                             ANGULAR_MAX_ACCEL // maximum acceleration (slew)
 );
 
 // create the chassis
