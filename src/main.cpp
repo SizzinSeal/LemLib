@@ -1,6 +1,7 @@
 #include "main.h"
 #include "lemlib/api.hpp" // IWYU pragma: keep
 #include "lemlib/chassis/trackingWheel.hpp"
+#include "pros/misc.h"
 
 // controller
 pros::Controller controller(pros::E_CONTROLLER_MASTER);
@@ -60,14 +61,14 @@ lemlib::ControllerSettings angularController(2, // proportional gain (kP)
 );
 
 // input curve for throttle input during driver control
-lemlib::ExpoDriveCurve throttleCurve(3, // joystick deadband out of 127
-                                     10, // minimum output where drivetrain will move out of 127
+lemlib::ExpoDriveCurve throttleCurve(0, // joystick deadband out of 127
+                                     12, // minimum output where drivetrain will move out of 127
                                      1.019 // expo curve gain
 );
 
 // input curve for steer input during driver control
-lemlib::ExpoDriveCurve steerCurve(3, // joystick deadband out of 127
-                                  10, // minimum output where drivetrain will move out of 127
+lemlib::ExpoDriveCurve steerCurve(4, // joystick deadband out of 127
+                                  23, // minimum output where drivetrain will move out of 127
                                   1.019 // expo curve gain
 );
 
@@ -121,10 +122,17 @@ void opcontrol() {
     // loop to continuously update motors
     while (true) {
         // get joystick positions
-        int leftY = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
-        int rightX = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
+        const auto leftY = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
+        const auto rightX = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
+        // calculate motor outputs
+        // const auto leftOutput = leftY + rightX;
+        // const auto rightOutput = leftY - rightX;
+        // set motor outputs
+        // leftMotors.move(throttlePower);
+        // rightMotors.move(throttlePower);
+        // print motor outputs to the brain screen
         // move the chassis with curvature drive
-        chassis.arcade(leftY, rightX, false, 1);
+        // chassis.arcade(leftY, rightX, false, 1);
         // delay to save resources
         pros::delay(10);
     }
