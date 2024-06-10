@@ -8,16 +8,17 @@
 pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
 // pistons
-pros::adi::DigitalOut leftWing('g');
+pros::adi::DigitalOut leftWing('h');
+pros::adi::DigitalOut rightWing('g');
+pros::adi::DigitalOut trackingWheelLift('a');
+pros::adi::DigitalOut hang('b');
 
 // motors
 pros::MotorGroup leftDrive({-13, 12, -14}, pros::MotorGearset::blue);
 pros::MotorGroup rightDrive({18, -16, 17}, pros::MotorGearset::blue);
 // the robot will either have a the intake motors connected or the kicker motors connected, but not both
-pros::Motor leftIntake(15);
-pros::Motor rightIntake(-19);
-pros::Motor leftKicker(-2);
-pros::Motor rightKicker(9);
+pros::MotorGroup intake({15, -19});
+pros::MotorGroup kicker({-2, 9});
 
 // sensors
 pros::Rotation verticalTrackingWheelEncoder(-11);
@@ -90,6 +91,8 @@ lemlib::Chassis chassis(drivetrain, linearController, angularController, sensors
  * Runs initialization code. This occurs as soon as the program is started.
  */
 void initialize() {
+    // set intake brake mode
+    intake.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
     pros::lcd::initialize(); // initialize brain screen
     chassis.calibrate(); // calibrate sensors
     // start a task to print the robot location to the brain screen
@@ -118,19 +121,39 @@ void competition_initialize() {}
 /**
  * Runs during auto
  */
-void autonomous() {}
+void autonomous() {
+    // move the tracking wheels down
+    trackingWheelLift.set_value(false);
+}
 
 /**
  * Runs in driver control
  */
 void opcontrol() {
-    // controller
-    // loop to continuously update motors
+    // lift the tracking wheels
+    trackingWheelLift.set_value(true);
+    bool hangToggle = false; // hang mechanism toggle
+    // loop while in driver control
     while (true) {
-        // get joystick positions
+        // hang mechanism
+        if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)) hangToggle = !hangToggle;
+        hang.set_value(hangToggle);
+        // wings
+        if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT)) leftWing.set_value(true);
+        else leftWing.set_value(false);
+        if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_Y)) rightWing.set_value(true);
+        else rightWing.set_value(false);
+        // intake
+        if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) intake.move(127);
+        else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
+            if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT) ||
+                controller.get_digital(pros::E_CONTROLLER_DIGITAL_Y))
+                intake.move(-127);
+            else intake.move(-50);
+        } else intake.move(0);
+        // drivetrain
         int leftY = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
         int rightX = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
-        // move the chassis with curvature drive
         chassis.arcade(leftY, rightX, 0, 0.75);
         // delay to save resources
         pros::delay(10);
