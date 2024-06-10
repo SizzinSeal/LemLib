@@ -252,6 +252,31 @@
                 "target": "v5",
                 "user_files": [],
                 "version": "8.3.8"
+            },
+            "robodash": {
+                "location": "/home/liam/.config/pros/templates/robodash@2.1.1",
+                "metadata": {
+                    "origin": "local"
+                },
+                "name": "robodash",
+                "py/object": "pros.conductor.templates.local_template.LocalTemplate",
+                "supported_kernels": "^4.1.0",
+                "system_files": [
+                    "include\\robodash\\core.h",
+                    "ASSET_FILES",
+                    "include\\robodash\\views\\console.hpp",
+                    "include\\robodash\\api.h",
+                    "include\\robodash\\views\\image.hpp",
+                    "include\\robodash\\views\\selector.hpp",
+                    "include\\robodash\\impl\\styles.h",
+                    "include\\robodash\\apix.h",
+                    "include\\robodash\\impl\\filesystem.h",
+                    "include\\robodash\\impl\\assets.h",
+                    "firmware\\robodash.a"
+                ],
+                "target": "v5",
+                "user_files": [],
+                "version": "2.1.1"
             }
         },
         "upload_options": {},
