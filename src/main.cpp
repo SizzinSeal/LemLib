@@ -32,11 +32,3 @@ void disabled() {}
  * runs after initialize if the robot is connected to field control
  */
 void competition_initialize() {}
-
-/**
- * Runs during auto
- */
-void autonomous() {
-    // move the tracking wheels down
-    trackingWheelLift.set_value(false);
-}
