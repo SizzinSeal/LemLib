@@ -28,13 +28,13 @@ constexpr double LINEAR_KD = 80.0; // linear derivative gain
 constexpr double LINEAR_ANTI_WINDUP = 3.0; // linear anti-windup
 constexpr double LINEAR_SMALL_ERROR = 1.0; // linear small error range in inches
 constexpr double LINEAR_LARGE_ERROR = 3.0; // linear large error range in inches
-constexpr int LINEAR_SMALL_ERROR_TIMEOUT = 100000; // linear small error range timeout in milliseconds
-constexpr int LINEAR_LARGE_ERROR_TIMEOUT = 500000; // linear large error range timeout in milliseconds
+constexpr int LINEAR_SMALL_ERROR_TIMEOUT = 100; // linear small error range timeout in milliseconds
+constexpr int LINEAR_LARGE_ERROR_TIMEOUT = 500; // linear large error range timeout in milliseconds
 constexpr double LINEAR_MAX_ACCEL = 20.0; // linear maximum acceleration
 
-constexpr double ANGULAR_KP = 2.0; // angular proportional gain
+constexpr double ANGULAR_KP = 7.0; // angular proportional gain
 constexpr double ANGULAR_KI = 0.0; // angular integral gain
-constexpr double ANGULAR_KD = 10.0; // angular derivative gain
+constexpr double ANGULAR_KD = 60.0; // angular derivative gain
 constexpr double ANGULAR_ANTI_WINDUP = 3.0; // angular anti-windup
 constexpr double ANGULAR_SMALL_ERROR = 1.0; // angular small error range in degrees
 constexpr double ANGULAR_LARGE_ERROR = 3.0; // angular large error range in degrees
