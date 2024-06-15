@@ -22,14 +22,14 @@ constexpr double DRIVETRAIN_WHEEL_DIAMETER = 4.0; // wheel diameter in inches
 constexpr double DRIVETRAIN_RPM = 343.0; // drivetrain rpm
 constexpr double DRIVETRAIN_HORIZONTAL_DRIFT = 2.0; // horizontal drift
 
-constexpr double LINEAR_KP = 10.0; // linear proportional gain
+constexpr double LINEAR_KP = 15.0; // linear proportional gain
 constexpr double LINEAR_KI = 0.0; // linear integral gain
-constexpr double LINEAR_KD = 3.0; // linear derivative gain
+constexpr double LINEAR_KD = 80.0; // linear derivative gain
 constexpr double LINEAR_ANTI_WINDUP = 3.0; // linear anti-windup
 constexpr double LINEAR_SMALL_ERROR = 1.0; // linear small error range in inches
 constexpr double LINEAR_LARGE_ERROR = 3.0; // linear large error range in inches
-constexpr int LINEAR_SMALL_ERROR_TIMEOUT = 100; // linear small error range timeout in milliseconds
-constexpr int LINEAR_LARGE_ERROR_TIMEOUT = 500; // linear large error range timeout in milliseconds
+constexpr int LINEAR_SMALL_ERROR_TIMEOUT = 100000; // linear small error range timeout in milliseconds
+constexpr int LINEAR_LARGE_ERROR_TIMEOUT = 500000; // linear large error range timeout in milliseconds
 constexpr double LINEAR_MAX_ACCEL = 20.0; // linear maximum acceleration
 
 constexpr double ANGULAR_KP = 2.0; // angular proportional gain
